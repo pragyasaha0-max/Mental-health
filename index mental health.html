@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calmind — Find Balance in Your Life</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+    --bg: #FBF3EF;
+    --panel-solid: #FFFFFF;
+    --ink: #3A2620;
+    --ink-soft: #8C6F63;
+    --rose-700: #C2694F;
+    --rose-600: #D98066;
+    --rose-500: #E39A81;
+    --peach-100: #FBE4D8;
+    --peach-50: #FDF0E9;
+    --line: #F0DCD0;
+    --shadow: rgba(194,105,79,0.18);
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  h1,h2,h3{ font-family:'Fraunces',serif; margin:0; }
+  p{ margin:0; }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 32px; }
+  ::selection{ background:var(--rose-500); color:#fff; }
+
+  /* ---------- try-it banner ---------- */
+  .tryit{ background:var(--ink); color:#fff; text-align:center; font-size:12.5px; font-weight:600; padding:10px 16px; position:relative; z-index:80; }
+  .tryit button{ background:none; border:1px solid rgba(255,255,255,.35); color:#fff; border-radius:999px; padding:5px 14px; margin-left:10px; font-size:12px; font-weight:600; cursor:pointer; transition:background .2s ease; }
+  .tryit button:hover{ background:rgba(227,154,129,.35); }
+  .tryit .status{ margin-left:10px; opacity:.8; }
+  #fileInput{ display:none; }
+
+  /* ---------- nav ---------- */
+  .nav{ position:sticky; top:0; z-index:60; background:rgba(251,243,239,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+  .nav-brand{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:17px; font-family:'Fraunces',serif; }
+  .nav-mark{ width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--rose-600),var(--rose-500)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; }
+  .nav-links{ display:flex; gap:32px; }
+  .nav-links a{ position:relative; font-size:13.5px; font-weight:500; color:var(--ink-soft); padding:6px 0; }
+  .nav-links a::after{ content:""; position:absolute; left:0; bottom:0; width:0; height:2px; background:var(--rose-600); transition:width .3s cubic-bezier(.4,0,.2,1); }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-links a:hover::after{ width:100%; }
+  .pill-btn{ display:inline-flex; align-items:center; gap:8px; border:none; border-radius:999px; font-weight:600; font-size:13.5px; padding:12px 22px; cursor:pointer; transition:transform .2s ease, box-shadow .25s ease, background .25s ease; }
+  .pill-btn.solid{ background:linear-gradient(120deg,var(--rose-600),var(--rose-500)); color:#fff; }
+  .pill-btn.solid:hover{ transform:translateY(-2px); box-shadow:0 16px 34px var(--shadow); }
+  .pill-btn.ghost{ background:var(--peach-100); color:var(--rose-700); }
+  .pill-btn.ghost:hover{ background:#F6D3C0; transform:translateY(-2px); }
+  .pill-btn.ghost-line{ background:transparent; border:1.5px solid var(--line); color:var(--ink); }
+  .pill-btn.ghost-line:hover{ border-color:var(--rose-500); box-shadow:0 0 0 3px var(--peach-100); }
+  .pill-btn .arr{ transition:transform .25s ease; }
+  .pill-btn:hover .arr{ transform:translateX(3px); }
+  .pill-btn[hidden]{ display:none; }
+
+  /* ---------- hero (illustrated, warm) ---------- */
+  .hero{ position:relative; padding:88px 0 76px; overflow:hidden; }
+  .hero-glow{ position:absolute; inset:0; z-index:0; background:radial-gradient(55% 55% at 78% 30%, var(--peach-100), transparent 65%), radial-gradient(45% 45% at 10% 85%, var(--peach-50), transparent 60%); }
+  .breath-wave{ position:absolute; left:0; right:0; top:30%; height:80px; opacity:.4; z-index:0; }
+  .breath-wave svg{ width:220%; height:100%; }
+  .breath-wave path{ fill:none; stroke:var(--rose-500); stroke-width:1.6; stroke-dasharray:14 10; animation:wave-flow 7s linear infinite; }
+  @keyframes wave-flow{ to{ stroke-dashoffset:-480; } }
+  .leaf{ position:absolute; opacity:.28; }
+  .leaf.l1{ width:70px; bottom:-10px; left:-10px; transform:rotate(-12deg); }
+  .leaf.l2{ width:56px; top:6%; right:2%; transform:rotate(24deg) scaleX(-1); }
+
+  .hero-grid{ position:relative; z-index:1; display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; color:var(--rose-700); letter-spacing:.03em; margin-bottom:20px; }
+  .eyebrow .pulse{ width:6px; height:6px; border-radius:50%; background:var(--rose-600); animation:pulse-dot 2.4s ease-in-out infinite; }
+  @keyframes pulse-dot{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.35; transform:scale(1.5); } }
+  .hero h1{ font-size:clamp(2.2rem,4.8vw,3.3rem); font-weight:600; line-height:1.15; margin-bottom:22px; }
+  .hero h1 .word{ display:inline-block; opacity:0; transform:translateY(18px); animation:word-in .7s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes word-in{ to{ opacity:1; transform:translateY(0); } }
+  .hero h1 .grad{ color:var(--rose-600); font-style:italic; }
+  .hero p.lede{ font-size:15.5px; color:var(--ink-soft); max-width:48ch; line-height:1.75; margin-bottom:30px; }
+  .chip-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
+  .focus-chip{ background:#fff; border:1px solid var(--line); color:var(--rose-700); font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:999px; transition:transform .2s ease, border-color .2s ease; }
+  .focus-chip:hover{ transform:translateY(-3px); border-color:var(--rose-500); }
+  .hero-ctas{ display:flex; gap:14px; }
+
+  .hero-visual{ position:relative; aspect-ratio:1/1; }
+  .hero-blob{ position:absolute; inset:6%; border-radius:44% 56% 58% 42% / 48% 42% 58% 52%; background:linear-gradient(150deg,var(--peach-100),var(--rose-500) 85%); box-shadow:0 30px 70px var(--shadow); animation:blob-morph 10s ease-in-out infinite; }
+  @keyframes blob-morph{ 0%,100%{ border-radius:44% 56% 58% 42% / 48% 42% 58% 52%; } 50%{ border-radius:58% 42% 45% 55% / 55% 48% 52% 45%; } }
+  .heart-hands{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:44%; }
+  .heart-hands svg{ width:100%; height:100%; }
+  .float-chip{ position:absolute; background:#fff; border-radius:14px; padding:10px 14px; font-size:12px; font-weight:600; color:var(--rose-700); box-shadow:0 14px 30px var(--shadow); display:flex; align-items:center; gap:8px; transition:transform .3s ease; }
+  .float-chip:hover{ transform:translateY(-4px); }
+  .float-chip.c1{ top:6%; left:-4%; }
+  .float-chip.c2{ bottom:8%; right:-4%; }
+
+  /* ---------- section shell ---------- */
+  section{ padding:80px 0; }
+  .section-head-center{ text-align:center; max-width:620px; margin:0 auto 44px; }
+  .section-head-center .eyebrow-line{ font-size:12.5px; font-weight:600; color:var(--rose-600); letter-spacing:.04em; margin-bottom:10px; }
+  .section-head-center h2{ font-size:clamp(1.5rem,3vw,2.1rem); font-weight:600; }
+
+  /* ---------- values strip ---------- */
+  .values-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .value-item{ text-align:center; padding:26px 16px; border-radius:18px; background:var(--panel-solid); border:1px solid var(--line); transition:transform .25s ease, box-shadow .25s ease; }
+  .value-item:hover{ transform:translateY(-6px); box-shadow:0 20px 40px var(--shadow); }
+  .value-icon{ width:46px; height:46px; border-radius:50%; background:var(--peach-100); color:var(--rose-700); display:flex; align-items:center; justify-content:center; font-size:18px; margin:0 auto 14px; }
+  .value-item h3{ font-size:14px; font-weight:600; margin-bottom:6px; }
+  .value-item p{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+
+  /* ---------- focus areas ---------- */
+  .work-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .work-card{ border-radius:20px; overflow:hidden; background:var(--panel-solid); border:1px solid var(--line); transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+  .work-card:hover{ transform:translateY(-8px); box-shadow:0 24px 48px var(--shadow); }
+  .work-cover{ height:140px; }
+  .wc0{ background:linear-gradient(150deg,#C2694F,#F2B79A); }
+  .wc1{ background:linear-gradient(150deg,#8C5E45,#D9A57F); }
+  .wc2{ background:linear-gradient(150deg,#B25B7A,#F0AABF); }
+  .work-body{ padding:18px 20px; }
+  .work-body h3{ font-size:15px; font-weight:600; margin-bottom:6px; transition:color .2s ease; }
+  .work-card:hover h3{ color:var(--rose-600); }
+  .work-body p{ font-size:13px; color:var(--ink-soft); line-height:1.55; }
+  .empty-note{ grid-column:1/-1; font-size:13.5px; color:var(--ink-soft); background:var(--panel-solid); border:1px dashed var(--line); border-radius:16px; padding:22px; text-align:center; }
+
+  /* ---------- approach / journey ---------- */
+  .approach-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center; }
+  .approach-visual{ position:relative; aspect-ratio:4/3; border-radius:22px; overflow:hidden; background:linear-gradient(160deg,var(--peach-50),var(--peach-100)); box-shadow:0 24px 54px var(--shadow); display:flex; align-items:center; justify-content:center; }
+  .approach-visual svg{ width:56%; height:56%; }
+  .talk-illustration{ width:78% !important; height:78% !important; }
+  .talk-line{ animation:talk-flow 2.6s linear infinite; }
+  @keyframes talk-flow{ to{ stroke-dashoffset:-48; } }
+  .talk-dot{ animation:talk-pulse 1.6s ease-in-out infinite; }
+  .talk-dot.d2{ animation-delay:.3s; }
+  @keyframes talk-pulse{ 0%,100%{ opacity:.35; transform:translateY(0); } 50%{ opacity:1; transform:translateY(-3px); } }
+  .approach-copy h2{ font-size:clamp(1.5rem,3vw,2rem); font-weight:600; margin-bottom:14px; }
+  .approach-copy p{ font-size:14.5px; color:var(--ink-soft); line-height:1.75; margin-bottom:22px; max-width:52ch; }
+  .check-list{ list-style:none; margin:0 0 26px; padding:0; display:flex; flex-direction:column; gap:11px; }
+  .check-list li{ font-size:13.5px; color:var(--ink); display:flex; align-items:center; gap:9px; }
+  .check-list li .tick{ width:18px; height:18px; border-radius:50%; background:var(--peach-100); color:var(--rose-700); font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+  /* ---------- stats banner ---------- */
+  .stats-banner{ background:linear-gradient(120deg,var(--rose-700),var(--rose-500)); border-radius:22px; padding:34px; display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .stat-item{ text-align:center; color:#fff; transition:transform .2s ease; }
+  .stat-item:hover{ transform:translateY(-4px); }
+  .stat-num{ font-family:'Fraunces',serif; font-size:2.1rem; font-weight:700; }
+  .stat-label{ font-size:11.5px; opacity:.88; margin-top:4px; text-transform:uppercase; letter-spacing:.04em; }
+
+  /* ---------- closing CTA ---------- */
+  .cta-banner{ background:var(--ink); border-radius:22px; padding:44px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; color:#fff; }
+  .cta-banner h2{ font-size:clamp(1.4rem,2.8vw,1.8rem); font-weight:600; margin-bottom:8px; }
+  .cta-banner p{ font-size:13.5px; color:#D9C4BA; }
+  .cta-banner .pill-btn.solid{ background:linear-gradient(120deg,var(--rose-600),var(--rose-500)); }
+
+  footer{ padding:40px 0; text-align:center; color:var(--ink-soft); font-size:12.5px; border-top:1px solid var(--line); display:flex; justify-content:space-between; }
+  footer a:hover{ color:var(--rose-600); }
+
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .65s cubic-bezier(.2,.8,.2,1), transform .65s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  @media (max-width:900px){
+    .hero-grid, .approach-grid{ grid-template-columns:1fr; }
+    .work-grid{ grid-template-columns:1fr 1fr; }
+    .values-strip{ grid-template-columns:repeat(2,1fr); }
+    .stats-banner{ grid-template-columns:1fr 1fr; }
+    .nav-links{ display:none; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    .reveal, .hero h1 .word{ opacity:1 !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tryit">
+  This theme carries a real profile too — upload a resume and the headline, numbers, focus areas and contact button update to match.
+  <button type="button" onclick="document.getElementById('fileInput').click()">Try it — upload a resume</button>
+  <span class="status" id="tryitStatus"></span>
+  <input type="file" id="fileInput" accept="application/pdf">
+</div>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-brand"><span class="nav-mark" id="navMark">C</span><span id="navName">Calmind</span></div>
+    <div class="nav-links">
+      <a href="#work">Focus</a>
+      <a href="#approach">Approach</a>
+      <a href="#approach">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="pill-btn ghost" id="downloadBtn" type="button" hidden onclick="downloadSite()">Download site</button>
+      <button class="pill-btn solid" type="button" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book a session <span class="arr">→</span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="breath-wave" aria-hidden="true">
+    <svg viewBox="0 0 900 80" preserveAspectRatio="none">
+      <path d="M0,40 C60,10 120,70 180,40 S300,10 360,40 S480,70 540,40 S660,10 720,40 S840,70 900,40 S1020,10 1080,40 S1200,70 1260,40 S1380,10 1440,40 S1560,70 1620,40 S1740,10 1800,40"/>
+    </svg>
+  </div>
+  <svg class="leaf l1" viewBox="0 0 60 100" aria-hidden="true"><path d="M30,95 C10,70 5,35 30,5 C55,35 50,70 30,95 Z" fill="var(--rose-500)"/></svg>
+  <svg class="leaf l2" viewBox="0 0 60 100" aria-hidden="true"><path d="M30,95 C10,70 5,35 30,5 C55,35 50,70 30,95 Z" fill="var(--rose-600)"/></svg>
+
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="pulse"></span><span id="heroEyebrow">MENTAL HEALTH &amp; WELLBEING</span></div>
+      <h1 id="heroTitle"></h1>
+      <p class="lede" id="heroLede">Professional support and compassionate care to help you heal, grow and live a more fulfilling life.</p>
+      <div class="chip-row" id="chipRow">
+        <span class="focus-chip">Individual Support</span>
+        <span class="focus-chip">Compassionate Care</span>
+        <span class="focus-chip">Evidence-Based</span>
+      </div>
+      <div class="hero-ctas">
+        <button class="pill-btn solid" type="button" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">See the work <span class="arr">→</span></button>
+        <a class="pill-btn ghost-line" id="contactBtn" href="#" hidden>Contact</a>
+      </div>
+    </div>
+    <div class="hero-visual reveal">
+      <div class="hero-blob"></div>
+      <div class="heart-hands">
+        <svg viewBox="0 0 200 200" fill="none">
+          <path d="M100,60 C90,40 55,40 50,70 C45,100 80,125 100,145 C120,125 155,100 150,70 C145,40 110,40 100,60 Z" stroke="#fff" stroke-width="4" fill="rgba(255,255,255,0.18)"/>
+          <path d="M40,150 C55,130 75,128 90,140 M160,150 C145,130 125,128 110,140" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="float-chip c1">💛 Trusted care</div>
+      <div class="float-chip c2">🌿 Since 2016</div>
+    </div>
+  </div>
+</header>
+
+<section id="values">
+  <div class="wrap">
+    <div class="values-strip">
+      <div class="value-item reveal"><div class="value-icon">🤍</div><h3>Personalized Support</h3><p>Tailored to your unique needs.</p></div>
+      <div class="value-item reveal"><div class="value-icon">🎓</div><h3>Experienced</h3><p>Backgrounds you can trust.</p></div>
+      <div class="value-item reveal"><div class="value-icon">🌱</div><h3>Proven Methods</h3><p>Evidence-backed approaches.</p></div>
+      <div class="value-item reveal"><div class="value-icon">🔒</div><h3>Confidential &amp; Safe</h3><p>Your privacy always comes first.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head-center reveal"><div class="eyebrow-line">01 · FOCUS AREAS</div><h2>Selected work &amp; case studies</h2></div>
+    <div class="work-grid" id="workGrid">
+      <div class="work-card reveal"><div class="work-cover wc0"></div><div class="work-body"><h3>Individual Support</h3><p>One-to-one, tailored care</p></div></div>
+      <div class="work-card reveal"><div class="work-cover wc1"></div><div class="work-body"><h3>Group &amp; Community</h3><p>Shared spaces for healing</p></div></div>
+      <div class="work-card reveal"><div class="work-cover wc2"></div><div class="work-body"><h3>Remote Sessions</h3><p>Support wherever you are</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="approach">
+  <div class="wrap approach-grid">
+    <div class="approach-visual reveal">
+      <svg class="talk-illustration" viewBox="0 0 220 190" fill="none">
+        <ellipse cx="110" cy="172" rx="90" ry="10" fill="var(--peach-100)"/>
+        <path d="M14,152 C14,104 38,86 62,86 C86,86 110,104 110,152 Z" fill="var(--rose-600)"/>
+        <circle cx="62" cy="52" r="22" fill="var(--rose-600)"/>
+        <path d="M110,152 C110,104 134,86 158,86 C182,86 206,104 206,152 Z" fill="var(--rose-500)"/>
+        <circle cx="158" cy="52" r="22" fill="var(--rose-500)"/>
+        <path class="talk-line" d="M92,66 Q110,42 128,66" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 7" fill="none"/>
+        <circle class="talk-dot d1" cx="105" cy="46" r="3.5" fill="#fff"/>
+        <circle class="talk-dot d2" cx="115" cy="46" r="3.5" fill="#fff"/>
+        <path d="M100,178 C96,166 100,158 108,158 C116,158 120,166 116,178 Z" fill="var(--rose-500)" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="approach-copy reveal">
+      <h2>Compassionate care for every step of the <span style="color:var(--rose-600); font-style:italic;">journey.</span></h2>
+      <p id="aboutText">A steady, genuine approach dedicated to helping people work through what's difficult and find their way to a better place.</p>
+      <ul class="check-list" id="checkList">
+        <li><span class="tick">✓</span>Personalised, person-first approach</li>
+        <li><span class="tick">✓</span>Grounded in real experience</li>
+        <li><span class="tick">✓</span>Confidential, judgement-free space</li>
+      </ul>
+      <a class="pill-btn ghost" href="#contact">Learn more <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="stats-banner reveal">
+      <div class="stat-item"><div class="stat-num" id="stat1Num" data-count="15">0</div><div class="stat-label" id="stat1Label">Years Experience</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat2Num" data-count="3">0</div><div class="stat-label" id="stat2Label">Focus Areas</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat3Num" data-count="5">0</div><div class="stat-label" id="stat3Label">Certifications</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat4Num" data-count="4">0</div><div class="stat-label" id="stat4Label">Roles Held</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="cta-banner reveal">
+      <div><h2>Let's start your journey — together.</h2><p>Have a role, referral or partnership in mind? I'd love to hear from you.</p></div>
+      <button class="pill-btn solid" id="ctaBtn" type="button">Get in touch <span class="arr">→</span></button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%;">
+    <span id="footerName">© 2026 Calmind. All rights reserved.</span>
+    <a href="#" id="footerLink">www.calmind.example</a>
+  </div>
+</footer>
+
+<script>
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+function initials(name){
+  return (name||'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('') || 'C';
+}
+function slugify(name){
+  return (name||'calmind').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'calmind';
+}
+function splitWords(el, text, delayStep){
+  el.innerHTML = text.split(' ').map((w,i)=>{
+    const cls = (i>=text.split(' ').length-2) ? 'word grad' : 'word';
+    return `<span class="${cls}" style="animation-delay:${(i*delayStep)}ms;">${w}</span>`;
+  }).join(' ');
+}
+splitWords(document.getElementById('heroTitle'), 'Find balance in your life', 75);
+
+/* ============================================================
+   YEARS-OF-EXPERIENCE CALCULATOR
+   ============================================================ */
+const MONTH_MAP = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function parseDateToken(str){
+  if(!str) return null;
+  const s = str.trim().toLowerCase();
+  if(s === 'present' || s === 'current') return new Date();
+  let m = s.match(/^([a-z]{3,9})\.?\s+(\d{4})$/);
+  if(m && MONTH_MAP[m[1].slice(0,3)] !== undefined) return new Date(parseInt(m[2],10), MONTH_MAP[m[1].slice(0,3)], 1);
+  m = s.match(/^(\d{4})$/);
+  if(m) return new Date(parseInt(m[1],10), 0, 1);
+  return null;
+}
+function computeYearsOfExperience(experience){
+  let totalMonths = 0;
+  (experience||[]).forEach(e=>{
+    const raw = (e.dates||'').trim();
+    const m = raw.match(/^(.*?)\s*(?:–|-|—|to)\s*(.*)$/i);
+    if(!m) return;
+    const start = parseDateToken(m[1]);
+    const end = parseDateToken(m[2]);
+    if(start && end){
+      const months = (end.getFullYear()-start.getFullYear())*12 + (end.getMonth()-start.getMonth());
+      if(months > 0) totalMonths += months;
+    }
+  });
+  return Math.round((totalMonths/12) * 10) / 10;
+}
+function animateCounterTo(el, target, suffix){
+  const duration = 1100;
+  let start = null;
+  function tick(now){
+    if(!start) start = now;
+    const progress = Math.min((now-start)/duration, 1);
+    const eased = 1 - Math.pow(1-progress, 3);
+    el.textContent = Math.round(target*eased) + (suffix||'');
+    if(progress < 1) requestAnimationFrame(tick);
+    else el.textContent = target + (suffix||'');
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ============================================================
+   PDF PARSING
+   ============================================================ */
+if(window.pdfjsLib){
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+async function extractPdfText(file){
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+  const lines = [];
+  for(let p=1; p<=pdf.numPages; p++){
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    const items = content.items.map(it => ({str: it.str, x: it.transform[4], y: it.transform[5]}));
+    items.sort((a,b) => (b.y - a.y) || (a.x - b.x));
+    let curY = null, curLine = [];
+    items.forEach(it=>{
+      if(curY === null || Math.abs(it.y - curY) > 3){
+        if(curLine.length) lines.push(curLine.map(i=>i.str).join(' '));
+        curLine = [it]; curY = it.y;
+      } else { curLine.push(it); }
+    });
+    if(curLine.length) lines.push(curLine.map(i=>i.str).join(' '));
+  }
+  return lines.map(l => l.replace(/\s+/g,' ').trim()).filter(Boolean);
+}
+const SECTION_KEYWORDS = {
+  summary: ['summary','objective','profile','about me','career objective','about'],
+  experience: ['experience','work experience','employment history','professional experience','work history'],
+  education: ['education','academic background','academic qualifications'],
+  projects: ['projects','project experience','selected projects','key projects'],
+  skills: ['skills','technical skills','core competencies','key skills'],
+  certifications: ['certifications','certificates','licenses']
+};
+function detectSection(line){
+  const clean = line.toLowerCase().replace(/[^a-z& ]/g,'').trim();
+  if(!clean || clean.length > 40) return null;
+  for(const key in SECTION_KEYWORDS){
+    if(SECTION_KEYWORDS[key].some(w => clean === w || clean.startsWith(w))) return key;
+  }
+  return null;
+}
+function parseResume(lines){
+  const data = {name:'', headline:'', location:'', email:'', linkedin:'', summary:'',
+    education:[], experience:[], skills:[], projects:[], certifications:[]};
+  const fullText = lines.join('\n');
+  const emailMatch = fullText.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
+  if(emailMatch) data.email = emailMatch[0];
+  const linkedinMatch = fullText.match(/linkedin\.com\/[^\s,)]+/i);
+  if(linkedinMatch) data.linkedin = 'https://' + linkedinMatch[0].replace(/^https?:\/\//i,'');
+  for(const line of lines.slice(0,6)){
+    if(!line.includes('@') && !/\d{3,}/.test(line) && line.length < 60 && !detectSection(line)){
+      data.name = line; break;
+    }
+  }
+  const locLine = lines.slice(1,8).find(l => /^[A-Za-z .]+,\s*[A-Za-z .]+$/.test(l) && l.length < 40 && l !== data.name);
+  if(locLine) data.location = locLine;
+  const nameIdx = lines.indexOf(data.name);
+  if(nameIdx > -1){
+    for(let i=nameIdx+1; i<Math.min(lines.length, nameIdx+4); i++){
+      const l = lines[i];
+      if(!l || detectSection(l)) break;
+      if(l.includes('@') || /\d{3,}/.test(l) || l === data.location) continue;
+      if(l.length < 80){ data.headline = l; break; }
+    }
+  }
+  let currentSection = null;
+  const buckets = {summary:[], experience:[], education:[], projects:[], skills:[], certifications:[]};
+  lines.forEach(line=>{
+    const sec = detectSection(line);
+    if(sec){ currentSection = sec; return; }
+    if(currentSection) buckets[currentSection].push(line);
+  });
+  data.summary = buckets.summary.join(' ').slice(0, 400);
+  data.skills = buckets.skills.join(', ').split(/[,•·|;]/).map(s=>s.trim()).filter(s=>s.length>1 && s.length<48).slice(0,10);
+  data.certifications = buckets.certifications.map(l=>l.replace(/^[•·\-]\s*/,'').trim()).filter(Boolean);
+
+  const dateRegex = /((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*)?(\d{4})\s*(?:–|-|—|to)\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*)?(present|\d{4})/i;
+  function groupByDates(blockLines){
+    const entries = []; let current = null;
+    blockLines.forEach(line=>{
+      if(dateRegex.test(line)){
+        if(current) entries.push(current);
+        current = {dates: line.match(dateRegex)[0], lines: []};
+      } else if(current){ current.lines.push(line); }
+      else { current = {dates:'', lines:[line]}; }
+    });
+    if(current) entries.push(current);
+    return entries;
+  }
+  data.experience = groupByDates(buckets.experience).map(e=>{
+    const first = e.lines[0] || '';
+    const parts = first.split(/,| at |—|-/);
+    return { title:(parts[0]||first).trim(), company:(parts[1]||'').trim(), dates:e.dates };
+  }).filter(e=>e.title);
+  data.education = groupByDates(buckets.education).map(e=>{
+    const first = e.lines[0] || '';
+    const rest = e.lines.slice(1);
+    return { degree:first.trim(), school:(rest[0]||'').trim(), dates:e.dates };
+  }).filter(e=>e.degree);
+
+  const projLines = buckets.projects;
+  const projects = []; let cur = null;
+  projLines.forEach(line=>{
+    if(line.length < 70 && (!cur || cur.description)){
+      if(cur) projects.push(cur);
+      cur = {title:line, description:''};
+    } else if(cur){ cur.description += (cur.description?' ':'') + line; }
+    else { cur = {title:line, description:''}; }
+  });
+  if(cur) projects.push(cur);
+  data.projects = projects.slice(0,3);
+
+  if(!data.headline && data.experience.length) data.headline = data.experience[0].title;
+  if(!data.summary){
+    const who = data.name || 'This professional';
+    data.summary = data.headline ? `${who} works as ${data.headline}, dedicated to helping people find balance and grow.` : `${who} is dedicated to helping people find balance and grow.`;
+  }
+  return data;
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+let CURRENT_PROFILE = null;
+const WORK_COVERS = ['wc0','wc1','wc2'];
+
+function renderProfile(p){
+  CURRENT_PROFILE = p;
+  const yearsExp = computeYearsOfExperience(p.experience);
+
+  document.getElementById('navMark').textContent = initials(p.name);
+  document.getElementById('navName').textContent = p.name || 'Calmind';
+  document.getElementById('footerName').textContent = `© 2026 ${p.name || 'Calmind'}. All rights reserved.`;
+
+  document.getElementById('heroEyebrow').textContent = p.location ? p.location.toUpperCase() : 'MENTAL HEALTH & WELLBEING';
+  splitWords(document.getElementById('heroTitle'), p.headline || 'Find balance in your life', 75);
+  document.getElementById('heroLede').textContent = p.summary || '';
+
+  const chipRow = document.getElementById('chipRow');
+  if(p.skills.length){
+    chipRow.innerHTML = p.skills.slice(0,3).map(s=>`<span class="focus-chip">${escapeHtml(s)}</span>`).join('');
+  }
+
+  const stat1 = document.getElementById('stat1Num'), stat2 = document.getElementById('stat2Num'),
+        stat3 = document.getElementById('stat3Num'), stat4 = document.getElementById('stat4Num');
+  document.getElementById('stat2Label').textContent = 'Projects';
+  animateCounterTo(stat1, yearsExp, '');
+  animateCounterTo(stat2, p.projects.length, '');
+  animateCounterTo(stat3, p.certifications.length, '');
+  animateCounterTo(stat4, p.experience.length, '');
+
+  const workGrid = document.getElementById('workGrid');
+  if(p.projects.length){
+    workGrid.innerHTML = p.projects.map((pr,i)=>`
+      <div class="work-card reveal in-view"><div class="work-cover ${WORK_COVERS[i%3]}"></div>
+      <div class="work-body"><h3>${escapeHtml(pr.title)}</h3><p>${escapeHtml(pr.description||'')}</p></div></div>`).join('');
+  } else {
+    workGrid.innerHTML = `<div class="empty-note">Add a Projects section to your resume to feature real work here.</div>`;
+  }
+
+  document.getElementById('aboutText').textContent = p.summary || '';
+  if(p.certifications.length){
+    document.getElementById('checkList').innerHTML = p.certifications.slice(0,6).map(c=>`<li><span class="tick">✓</span>${escapeHtml(c)}</li>`).join('');
+  }
+
+  const contactBtn = document.getElementById('contactBtn');
+  const ctaBtn = document.getElementById('ctaBtn');
+  const footerLink = document.getElementById('footerLink');
+  if(p.email || p.linkedin){
+    const href = p.linkedin || ('mailto:' + p.email);
+    contactBtn.href = href;
+    contactBtn.target = p.linkedin ? '_blank' : '_self';
+    contactBtn.rel = 'noopener';
+    contactBtn.hidden = false;
+    contactBtn.textContent = p.linkedin ? 'Connect on LinkedIn' : 'Contact me';
+    ctaBtn.onclick = ()=> window.open(href, p.linkedin ? '_blank' : '_self');
+    ctaBtn.innerHTML = (p.email ? 'Email me' : 'Connect') + ' <span class="arr">→</span>';
+    if(p.email){ footerLink.href = 'mailto:' + p.email; footerLink.textContent = p.email; }
+  }
+
+  document.querySelectorAll('.reveal:not(.in-view)').forEach(el=>el.classList.add('in-view'));
+}
+
+document.getElementById('fileInput').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('tryitStatus');
+  if(file.type !== 'application/pdf'){ status.textContent = "That isn't a PDF."; return; }
+  status.textContent = 'Reading your resume…';
+  try{
+    const lines = await extractPdfText(file);
+    if(lines.length < 3){ status.textContent = "Couldn't read text — try a text-based PDF."; return; }
+    const parsed = parseResume(lines);
+    renderProfile(parsed);
+    document.getElementById('downloadBtn').hidden = false;
+    status.textContent = 'Done — this page is now yours.';
+  } catch(err){
+    status.textContent = 'Could not process that file.';
+  }
+});
+
+function downloadSite(){
+  const doc = document.documentElement.cloneNode(true);
+  doc.querySelector('.tryit')?.remove();
+  doc.querySelector('#downloadBtn')?.remove();
+  const scripts = doc.querySelectorAll('script');
+  const lastScript = scripts[scripts.length-1];
+  const marker = "revealTargets.forEach(t=>io.observe(t));";
+  const text = lastScript.textContent;
+  const idx = text.lastIndexOf(marker);
+  const inject = "\nrenderProfile(" + JSON.stringify(CURRENT_PROFILE) + ");\n";
+  lastScript.textContent = text.slice(0, idx + marker.length) + inject;
+  const html = '<!DOCTYPE html>\n' + doc.outerHTML;
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = slugify((CURRENT_PROFILE||{}).name) + '.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+const revealTargets = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+      entry.target.querySelectorAll('[data-count]').forEach(counter=>{
+        if(counter.dataset.done) return;
+        counter.dataset.done = '1';
+        animateCounterTo(counter, parseFloat(counter.getAttribute('data-count')), '');
+      });
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealTargets.forEach(t=>io.observe(t));
+</script>
+</body>
+</html>
