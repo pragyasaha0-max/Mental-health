@@ -40,10 +40,6 @@ hm = cv2.dilate(hm, np.ones((5, 5), np.uint8), iterations=2)
 hero = cv2.inpaint(hero, hm, 5, cv2.INPAINT_TELEA)
 save('hero', hero)
 
-# ---- five service photos
-for i, (a, b) in enumerate([(61, 231), (249, 418), (436, 599), (617, 781), (799, 963)], 1):
-    save(f's{i}', im[660:770, a:b])
-
 # ---- about photo: remove the play button
 ab = im[917:1122, 75:369].copy()
 pm = np.zeros(ab.shape[:2], np.uint8)
@@ -51,9 +47,5 @@ cv2.circle(pm, (225 - 75, 1030 - 917), 24, 255, -1)
 ab = soft_fill(ab, pm, 9)
 save('about', ab)
 
-# ---- testimonial avatars
-for i, cx in enumerate([95, 403, 708], 1):
-    save(f'p{i}', im[1213:1257, cx - 22:cx + 22], 3)
-
 # ---- closing banner photo
-save('cta', im[1350:1467, 330:965])
+save('cta', im[1350:1467, 330:770])  # mountains only, the hiker is cropped out

@@ -2,7 +2,7 @@ import re,base64
 b=lambda n:'data:image/jpeg;base64,'+base64.b64encode(open(f'img/{n}.jpg','rb').read()).decode()
 p=open('page.html').read()
 p=p.replace('{{THEME_CSS}}',open('calm-sage.css').read()).replace('{{THEME_JS}}',open('calm-sage.js').read()).replace('{{HELPERS}}',open('helpers.js').read()).replace('{{TAIL}}',open('tail.js').read())
-for k,n in [('HERO','hero'),('ABOUT','about'),('CTA','cta')]+[('S%d'%i,'s%d'%i) for i in range(1,6)]+[('P%d'%i,'p%d'%i) for i in range(1,4)]: p=p.replace('{{%s}}'%k,b(n))
+for k,n in [('HERO','hero'),('ABOUT','about'),('CTA','cta')]: p=p.replace('{{%s}}'%k,b(n))
 assert '{{' not in p
 open('index.html','w').write(p)
 css=''.join(re.findall(r'<style>(.*?)</style>',p,re.S));print(len(p)//1024,'KB css braces',css.count('{'),css.count('}'),'script tags',len(re.findall(r'<script[ >]',p)),p.count('</script>'))

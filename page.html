@@ -97,8 +97,6 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
 .pg-card{position:relative;display:flex;flex-direction:column;border-radius:14px;background:#fff;border:1px solid var(--cm-line);transition:transform .3s,box-shadow .3s}
 .pg-card:hover{box-shadow:var(--cm-shadow)}
 .pg-ph{position:relative;aspect-ratio:170/112;overflow:hidden;background:#e6e0d2;border-radius:13px 13px 0 0}
-.pg-ph img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.02);transition:transform .8s ease}
-.pg-card:hover .pg-ph img{transform:scale(1.12)}
 .pg-badge{position:absolute;left:12px;top:calc(112/170*100%*0 + 0px);margin-top:-20px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#e4ece1;color:var(--cm-teal);border:3px solid #fff;transition:transform .35s,background .25s,color .25s}
 .pg-badge .ic{width:19px;height:19px}
 .pg-card:hover .pg-badge{transform:translateY(-4px) rotate(-8deg);background:var(--cm-teal);color:#fff}
@@ -133,8 +131,21 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
 /* ---------- experience cards (shaped like the testimonial row) ---------- */
 .pg-jobs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .pg-job{display:grid;grid-template-columns:54px 1fr;gap:16px;padding:22px;border-radius:14px;background:#fff;border:1px solid var(--cm-line);align-content:start}
-.pg-job img{width:54px;height:54px;border-radius:50%;object-fit:cover;transition:transform .4s}
-.pg-job:hover img{transform:scale(1.1) rotate(-4deg)}
+.pg-art{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;transition:transform .8s ease}
+.pg-card:hover .pg-art{transform:scale(1.08)}
+.pg-art i{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);animation:pg-float 9s ease-in-out infinite}
+.pg-art i:nth-child(1){width:90px;height:90px;left:-20px;top:-26px}
+.pg-art i:nth-child(2){width:64px;height:64px;right:-10px;bottom:-18px;animation-delay:-4s}
+@keyframes pg-float{50%{transform:translate(10px,8px) scale(1.1)}}
+.pg-art .ic{position:relative;width:54px;height:54px;color:var(--cm-teal-d);stroke-width:1.3}
+.pg-art .ic svg{stroke-width:1.3}
+.pg-art.t0{background:linear-gradient(135deg,#dfe9dc,#bcd3c3)}
+.pg-art.t1{background:linear-gradient(135deg,#f1e6d3,#e1cfae)}
+.pg-art.t2{background:linear-gradient(135deg,#d8e6e3,#b3cfcb)}
+.pg-art.t3{background:linear-gradient(135deg,#ecdfd6,#d9c2b3)}
+.pg-art.t4{background:linear-gradient(135deg,#e3e8d4,#c9d4ac)}
+.pg-job .av{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#e4ece1;color:var(--cm-teal);font:500 18px var(--cm-head);transition:transform .4s,background .25s,color .25s}
+.pg-job:hover .av{transform:scale(1.1) rotate(-4deg);background:var(--cm-teal);color:#fff}
 .pg-job .dt{font-size:12px;letter-spacing:.06em;color:var(--cm-teal);font-weight:600;margin-bottom:6px}
 .pg-job h3{font:500 17px/1.3 var(--cm-head);transition:color .25s}
 .pg-job:hover h3{color:var(--cm-teal)}
@@ -358,9 +369,6 @@ const ARC = 226.2;                  // circumference of the r=36 progress ring
 const NOW_YEAR = new Date().getFullYear();
 let CURRENT = null;                 // set once a real CV has been processed
 
-/* photos cut from the design: five service shots for project cards, three faces for the experience cards */
-const PHOTOS = ['{{S1}}', '{{S2}}', '{{S3}}', '{{S4}}', '{{S5}}'];
-const FACES = ['{{P1}}', '{{P2}}', '{{P3}}'];
 
 /* fictional CV shown before anything is uploaded; it goes through the same parser as a real PDF */
 const SAMPLE = [
@@ -416,6 +424,8 @@ const PATHS = {
 const svgIcon = name => '<svg viewBox="0 0 ' + (name === 'leaf' ? '24 24' : '24 24') + '" aria-hidden="true">' + (PATHS[name] || '') + '</svg>';
 function paintIcons(root){ (root || document).querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = svgIcon(el.dataset.ic); }); }
 const BADGE_ICONS = ['user', 'users', 'heart', 'sofa', 'laptop'];
+const ART_ICONS = ['brain', 'heart', 'users', 'sofa', 'laptop'];
+const monogram = t => (String(t || '').match(/[A-Za-z0-9]+/g) || ['·']).slice(0, 2).map(w => w[0].toUpperCase()).join('');
 
 /* ---------- small helpers ---------- */
 function yearsLabel(y){ return y >= 1 ? {n: Math.floor(y), s: '+'} : {n: Math.round(y * 10) / 10, s: ''}; }
@@ -474,7 +484,7 @@ function renderProfile(p, opts){
 
   /* project cards: the five photos from the design, cycled */
   $('cards').innerHTML = p.projects.length ? p.projects.map((pr, i) =>
-    '<article class="pg-card cm-glow' + (i >= 5 ? ' extra' : '') + '"><div class="pg-ph"><img alt="" src="' + PHOTOS[i % 5] + '"></div>' +
+    '<article class="pg-card cm-glow' + (i >= 5 ? ' extra' : '') + '"><div class="pg-ph"><div class="pg-art t' + (i % 5) + '"><i></i><i></i><span class="ic">' + svgIcon(ART_ICONS[i % 5]) + '</span></div></div>' +
     '<div class="body"><span class="pg-badge"><span class="ic">' + svgIcon(BADGE_ICONS[i % 5]) + '</span></span>' +
     '<h3>' + escapeHtml(pr.title) + '</h3><p>' + escapeHtml(pr.description || '') + '</p>' +
     '<a class="pg-go" href="#experience" aria-label="Details"><span class="ic">' + svgIcon('arrow') + '</span></a></div></article>').join('')
@@ -483,7 +493,7 @@ function renderProfile(p, opts){
 
   /* experience cards: face photo, dates, role, company, first bullet */
   $('jobList').innerHTML = p.experience.length ? p.experience.map((e, i) =>
-    '<article class="pg-job cm-glow' + (i >= 3 ? ' extra' : '') + '"><img alt="" src="' + FACES[i % 3] + '"><div>' +
+    '<article class="pg-job cm-glow' + (i >= 3 ? ' extra' : '') + '"><span class="av">' + escapeHtml(monogram(e.company || e.title)) + '</span><div>' +
     '<div class="dt">' + escapeHtml((e.dates || '').replace(/\s*-\s*/, ' – ') || 'Role') + '</div>' +
     '<h3>' + escapeHtml(e.title) + '</h3><div class="co">' + escapeHtml(e.company || '') + '</div>' +
     (e.points && e.points[0] ? '<p>“' + escapeHtml(e.points[0]) + '”</p>' : '') + '</div></article>').join('')
