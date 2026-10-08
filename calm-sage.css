@@ -1,0 +1,147 @@
+/*
+  Calm Sage: soft sage-green theme for CV-driven portfolio pages
+  Pair with calm-sage.js. Every class is prefixed cm- so it can sit inside another site.
+
+  Turn it on:   <body class="cm" data-cm-bg>
+  Colours:      change the --cm-* values in the first block.
+*/
+
+.cm{
+  --cm-bg:#faf8f3;
+  --cm-card:#ffffff;
+  --cm-tint:#eef2ea;
+  --cm-line:rgba(63,111,91,.18);
+  --cm-ink:#1c2b3a;
+  --cm-soft:#6b7a76;
+  --cm-teal:#3f6f5b;
+  --cm-teal-d:#2f5a48;
+  --cm-teal-l:#5d9079;
+  --cm-blue:#7fa88f;
+  --cm-green:#a9c6a3;
+  --cm-grad:linear-gradient(95deg,#3f6f5b,#7fa88f);
+  --cm-grad-cta:linear-gradient(95deg,#2f5a48,#6f9a82);
+  --cm-shadow:0 18px 38px -20px rgba(28,43,58,.35);
+  --cm-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --cm-head:'Fraunces',Georgia,'Times New Roman',serif;
+  margin:0;background:var(--cm-bg);color:var(--cm-ink);font-family:var(--cm-sans);
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+}
+.cm *,.cm *::before,.cm *::after{box-sizing:border-box}
+.cm h1,.cm h2,.cm h3,.cm p{margin:0}
+.cm h1,.cm h2,.cm h3{font-family:var(--cm-head)}
+:where(.cm) a{color:inherit;text-decoration:none}
+.cm ::selection{background:var(--cm-teal);color:#fff}
+
+/* ---------- background: faint molecule dots drifting over a pale wash ---------- */
+.cm-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(800px 460px at 85% -6%,rgba(127,168,143,.16),transparent 70%),
+    radial-gradient(640px 440px at 2% 92%,rgba(233,214,180,.30),transparent 70%),
+    var(--cm-bg)}
+.cm-bg::before{content:"";position:absolute;inset:-64px;opacity:.55;
+  background-image:radial-gradient(circle,rgba(63,111,91,.16) 1.4px,transparent 1.6px);
+  background-size:42px 42px;animation:cm-drift 40s linear infinite;
+  -webkit-mask-image:radial-gradient(ellipse at 70% 20%,#000,transparent 72%);mask-image:radial-gradient(ellipse at 70% 20%,#000,transparent 72%)}
+@keyframes cm-drift{to{transform:translate(42px,42px)}}
+.cm-bg svg{position:absolute;inset:0;width:100%;height:100%}
+.cm-bg path{fill:none;stroke:var(--cm-teal);stroke-width:1.2;stroke-dasharray:3 11;opacity:.22;animation:cm-flow 26s linear infinite}
+.cm-bg path:nth-child(2){animation-duration:36s;animation-direction:reverse;stroke:var(--cm-blue);opacity:.16}
+.cm-bg path:nth-child(3){animation-duration:48s;opacity:.14}
+@keyframes cm-flow{to{stroke-dashoffset:-280}}
+
+/* ---------- card ---------- */
+.cm-card{position:relative;border:1px solid var(--cm-line);border-radius:16px;background:var(--cm-card);padding:22px;
+  box-shadow:0 10px 26px -20px rgba(16,42,77,.4);
+  transition:transform .3s ease,border-color .3s,box-shadow .3s}
+.cm-card:hover{border-color:rgba(63,111,91,.4);box-shadow:var(--cm-shadow)}
+.cm-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--cm-teal);background:none;border:0;padding:4px 0;cursor:pointer;font-family:inherit;transition:gap .2s,color .2s}
+.cm-link svg{width:14px;height:14px}
+.cm-link:hover{gap:10px;color:var(--cm-teal-d)}
+
+/* ---------- buttons ---------- */
+.cm-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font:600 14px var(--cm-sans);padding:12px 24px;border-radius:99px;border:1.5px solid transparent;cursor:pointer;
+  transition:transform .2s,box-shadow .25s,background .25s,border-color .25s,color .25s}
+.cm-btn svg{width:17px;height:17px;flex:none}
+.cm-btn:hover{transform:translateY(-2px)}
+.cm-btn[hidden]{display:none}
+.cm-btn-solid{background:linear-gradient(180deg,var(--cm-teal-l),var(--cm-teal-d));color:#fff;box-shadow:0 10px 22px -10px var(--cm-teal)}
+.cm-btn-solid:hover{box-shadow:0 14px 28px -8px var(--cm-teal)}
+.cm-btn-line{background:rgba(255,255,255,.6);border-color:var(--cm-teal);color:var(--cm-teal-d)}
+.cm-btn-line:hover{background:var(--cm-teal);color:#fff}
+.cm-btn-white{background:#fff;color:var(--cm-blue);box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+.cm-btn-sm{padding:9px 16px;font-size:13px}
+.cm-btn-solid::after{content:"";position:absolute;inset:0;pointer-events:none;transform:translateX(-130%);
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.5) 50%,transparent 62%);animation:cm-shimmer 6s ease-in-out infinite}
+.cm-btn-solid:hover::after{animation:none;transform:translateX(130%);transition:transform .8s ease}
+@keyframes cm-shimmer{0%,70%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+
+/* ---------- chips ---------- */
+.cm-chips{display:flex;flex-wrap:wrap;gap:10px}
+.cm-chip{display:inline-block;padding:8px 16px;border-radius:99px;font-size:13px;border:1px solid var(--cm-line);
+  background:var(--cm-tint);color:var(--cm-ink);transition:transform .2s,background .25s,border-color .25s,color .25s}
+.cm-chip:hover{transform:translateY(-3px);background:var(--cm-teal);border-color:var(--cm-teal);color:#fff}
+
+/* ---------- text that highlights on hover ---------- */
+.cm-hl{background:linear-gradient(var(--cm-teal),var(--cm-teal)) 0 100%/0 2px no-repeat;transition:background-size .35s,color .25s}
+.cm-hl:hover{background-size:100% 2px;color:var(--cm-teal)}
+
+/* ---------- progress bar (set --cm-pct inline) ---------- */
+.cm-bar{height:6px;border-radius:99px;background:var(--cm-line);overflow:hidden}
+.cm-bar i{display:block;height:100%;width:calc(var(--cm-pct,0) * 1%);border-radius:99px;background:var(--cm-grad);transition:width 1s cubic-bezier(.3,.7,.2,1)}
+.cm-js .cm-bar:not(.is-in) i{width:0}
+
+/* ---------- scroll reveal (hidden only while JS runs) ---------- */
+.cm-js .cm-reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease,border-color .3s,box-shadow .3s}
+.cm-js .cm-reveal.is-in{opacity:1;transform:none}
+.cm-js .cm-reveal.is-in.cm-card:hover{transform:translateY(-4px)}
+.cm-js .cm-stagger>*{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease,border-color .3s,box-shadow .3s}
+.cm-js .cm-stagger.is-in>*{opacity:1;transform:none}
+.cm-js .cm-stagger.is-in>*:nth-child(2){transition-delay:.08s}
+.cm-js .cm-stagger.is-in>*:nth-child(3){transition-delay:.16s}
+.cm-js .cm-stagger.is-in>*:nth-child(4){transition-delay:.24s}
+.cm-js .cm-stagger.is-in>*:nth-child(5){transition-delay:.32s}
+.cm-js .cm-stagger.is-in>*:nth-child(n+6){transition-delay:.4s}
+.cm-js .cm-stagger.is-in>*:hover{transform:translateY(-4px);transition-delay:0s}
+
+/* words appear one at a time: <h1 data-cm-words> */
+.cm-w{display:inline-block}
+.cm-js [data-cm-words] .cm-w{opacity:0;transform:translateY(.55em);transition:opacity .6s ease,transform .6s ease;transition-delay:calc(var(--i) * 55ms)}
+.cm-js [data-cm-words].is-in .cm-w{opacity:1;transform:none}
+.cm-js [data-cm-words] .cm-wipe{display:inline-block;clip-path:inset(0 100% 0 0);transition:clip-path 1.2s cubic-bezier(.6,.1,.2,1) .45s}
+.cm-js [data-cm-words].is-in .cm-wipe{clip-path:inset(-10% -2% -10% 0)}
+
+/* ---------- light that runs round a border: add cm-glow to a box ----------
+   ::before is the travelling light, ::after the spotlight under the cursor. */
+@property --cm-a{syntax:'<angle>';inherits:false;initial-value:0deg}
+.cm-glow{position:relative;isolation:isolate}
+.cm-glow::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--cm-a),transparent 0 50%,rgba(127,168,143,.2) 56%,var(--cm-teal) 76%,var(--cm-blue) 90%,#f1dfae 97%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  opacity:.5;animation:cm-orbit 9s linear infinite;animation-delay:var(--cm-delay,0s);transition:opacity .35s}
+@keyframes cm-orbit{to{--cm-a:360deg}}
+.cm-glow::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(260px circle at var(--cm-mx,50%) var(--cm-my,50%),rgba(127,168,143,.2),transparent 65%)}
+.cm-glow:hover::before,.cm-glow.is-lit::before{opacity:1;animation-duration:3s}
+.cm-glow:hover::after{opacity:1}
+.cm-glow.is-lit{box-shadow:0 0 28px -8px var(--cm-teal),var(--cm-shadow)}
+/* on the dark gradient bar the light is white */
+.cm-glow-w::before{background:conic-gradient(from var(--cm-a),transparent 0 50%,rgba(255,255,255,.2) 58%,rgba(255,255,255,.8) 84%,#fff 96%,transparent 100%)}
+.cm-glow-w::after{background:radial-gradient(300px circle at var(--cm-mx,50%) var(--cm-my,50%),rgba(255,255,255,.2),transparent 65%)}
+
+/* ---------- timeline line that draws itself ---------- */
+.cm-js .cm-draw{transform:scaleY(0);transform-origin:top;transition:transform 1.4s ease}
+.cm-js .cm-draw.is-in{transform:none}
+
+/* ---------- map pin that pulses ---------- */
+.cm-pin{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--cm-teal);box-shadow:0 0 0 3px #fff}
+.cm-pin::before,.cm-pin::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--cm-teal);animation:cm-ping 2.6s ease-out infinite;animation-delay:var(--cm-d,0s)}
+.cm-pin::after{animation-delay:calc(var(--cm-d,0s) + 1.3s)}
+@keyframes cm-ping{from{transform:scale(1);opacity:.8}to{transform:scale(4.2);opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  .cm *,.cm *::before,.cm *::after{animation:none!important;transition:none!important}
+  .cm-js .cm-reveal,.cm-js .cm-stagger>*,.cm-js [data-cm-words] .cm-w,.cm-js .cm-draw{opacity:1!important;transform:none!important}
+  .cm-js [data-cm-words] .cm-wipe{clip-path:none!important}
+}
